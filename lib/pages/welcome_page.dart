@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/widgets/auth_button.dart';
 
-class LoginPage extends StatefulWidget {
-  _LoginPageState createState() => _LoginPageState();
+class WelcomePage extends StatefulWidget {
+  _WelcomePageState createState() => _WelcomePageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _WelcomePageState extends State<WelcomePage> {
 
   void goToSignInPage() {
-    //TODO: Go to sign in page
+    Navigator.pushNamed(context, '/signin');
   }
 
   void goToSignUpPage() {
@@ -24,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             Container(
-              padding: EdgeInsets.all(100),
+              height: 100,
               child: Image.asset('assets/logo.png'),
             ),
             Column(
