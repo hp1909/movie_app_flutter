@@ -3,12 +3,12 @@ import 'package:movie_app/widgets/auth_button.dart';
 import 'package:movie_app/widgets/auth_text_field.dart';
 import 'package:movie_app/utils/constants.dart';
 
-class SignInPage extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
   @override
-  _SignInPageState createState() => _SignInPageState();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignUpPageState extends State<SignUpPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -56,7 +56,7 @@ class _SignInPageState extends State<SignInPage> {
                 alignment: Alignment.topRight,
                 child: FlatButton(
                   textColor: Colors.white,
-                  child: Text('Sign Up'),
+                  child: Text('Sign In'),
                   onPressed: onSignUp,
                 ),
               ),
@@ -98,7 +98,7 @@ class _SignInPageState extends State<SignInPage> {
                             onPressed: _handleCancel,
                           ),
                           AuthButton(
-                            label: 'Sign In',
+                            label: 'Sign Up',
                             color: COLOR_FOCUS,
                             onPressed: _handleSignIn,
                           ),

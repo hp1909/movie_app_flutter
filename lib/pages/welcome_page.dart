@@ -7,12 +7,16 @@ class WelcomePage extends StatefulWidget {
 
 class _WelcomePageState extends State<WelcomePage> {
 
-  void goToSignInPage() {
+  void _handleSignIn() {
     Navigator.pushNamed(context, '/signin');
   }
 
-  void goToSignUpPage() {
-    //TODO: Go to sign up page
+  void _handleSignUp() {
+    Navigator.pushNamed(context, '/signup');
+  }
+
+  void _handleSkip() {
+    Navigator.pushNamed(context, '/main');
   }
 
   @override
@@ -24,20 +28,20 @@ class _WelcomePageState extends State<WelcomePage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             Container(
-              height: 100,
+              height: 80,
               child: Image.asset('assets/logo.png'),
             ),
             Column(
               children: <Widget>[
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     AuthButton(
-                      onPressed: goToSignInPage,
+                      onPressed: _handleSignIn,
                       label: 'Sign in',
                     ),
                     AuthButton(
-                      onPressed: goToSignUpPage,
+                      onPressed: _handleSignUp,
                       label: 'Sign up',
                     )
                   ],
@@ -56,7 +60,8 @@ class _WelcomePageState extends State<WelcomePage> {
                         ),
                       ],
                     ),
-                    disabledTextColor: Colors.white,
+                    textColor: Colors.white,
+                    onPressed: _handleSkip,
                   ),
                 ),
               ],
