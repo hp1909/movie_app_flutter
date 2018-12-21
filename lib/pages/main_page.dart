@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:movie_app/model/movie_list.dart';
 import 'package:movie_app/utils/constants.dart';
 
 class MainPage extends StatefulWidget {
@@ -7,6 +11,16 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    _fetchData().then((movies) {
+      debugPrint('$movies');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,12 +58,19 @@ class _MainPageState extends State<MainPage> {
                   Tab(text: 'MY FAV'),
                 ]),
             ),
-            Container(
-              height: 500,
+            Expanded(
+              flex: 1,
               child: TabBarView(
                 children: [
                   Container(
-                    child: Text('hello'),
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 5.0,
+                      mainAxisSpacing: 5.0,
+                      childAspectRatio: 3 / 4,
+                      children: _buildGridTitle(10),
+                    ),
+                    padding: EdgeInsets.all(5),
                   ),
                   Container(
                     child: Text('hello'),
@@ -64,5 +85,21 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildGridTitle(numberOfTiles) {
+    List<Container> _containers = List<Container>.generate(numberOfTiles,
+      (int index) {
+      return new Container(
+        color: Colors.orangeAccent,
+      );
+    });
+    return _containers;
+  }
+
+  Future<MovieList> _fetchData() async {
+    final respone =
+      await http.get('https://api.themoviedb.org/3/movie/popular?api_key=f507d227105e763cdd2ddf231fdfee81&language=en-US&page=1');
+    return MovieList.fromJSON(json.decode(respone.body));
   }
 }
