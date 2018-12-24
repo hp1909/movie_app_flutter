@@ -98,4 +98,3 @@ class _MovieTileState extends State<MovieTile> {
     );
   }
 }
-0

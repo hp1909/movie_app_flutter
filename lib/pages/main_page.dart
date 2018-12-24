@@ -16,18 +16,22 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin {
   TabController _tabController;
 
-  List<Movie> movies = [];
-  int page = 1;
+  List<Movie> _popularMovies = [];
+  int _popularPage = 1;
   String movieType = POPULAR;
+  
+  List<Movie> _mostRatedMovies = [];
+  int _mostRatedPage = 1;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(_handleTabSelection);
 
-    _fetchData(movieType, page).then((movieList) {
+    _fetchData(movieType, _popularPage).then((movieList) {
       setState(() {
-        movies.addAll(movieList.movies);
+        _popularMovies.addAll(movieList.movies);
       });
     });
   }
@@ -76,10 +80,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 controller: _tabController,
                 children: [
                   MoviesGridView(
-                    movies: this.movies,
+                    movies: this._popularMovies,
                   ),
-                  Container(
-                    child: Text('hello'),
+                  MoviesGridView(
+                    movies: this._mostRatedMovies,
                   ),
                   Container(
                     child: Text('hello'),
@@ -101,5 +105,31 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           + type + '?api_key=f507d227105e763cdd2ddf231fdfee81&language=en-US&page='
           + page.toString());
     return MovieList.fromJSON(json.decode(response.body));
+  }
+
+  void _handleTabSelection() async {
+    if (!_tabController.indexIsChanging) {
+      switch (_tabController.index) {
+        case 0:
+          movieType = POPULAR;
+          if (_popularMovies.length == 0) {
+            MovieList fetchedMovies = await _fetchData(movieType, _popularPage);
+            _popularMovies.addAll(fetchedMovies.movies);
+          }
+          break;
+        case 1:
+          movieType = MOST_RATED;
+          if (_mostRatedMovies.length == 0) {
+            MovieList fetchedMovies = await _fetchData(
+                movieType, _mostRatedPage);
+            setState(() {
+              _mostRatedMovies.addAll(fetchedMovies.movies);
+            });
+          }
+          break;
+        default:
+          movieType = '';
+      }
+    }
   }
 }
