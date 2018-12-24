@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+import 'package:movie_app/widgets/movies_grid_view.dart';
 import 'package:movie_app/model/movie_list.dart';
+import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/utils/constants.dart';
 
 class MainPage extends StatefulWidget {
@@ -10,14 +13,22 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin {
+  TabController _tabController;
+
+  List<Movie> movies = [];
+  int page = 1;
+  String movieType = POPULAR;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 3, vsync: this);
 
-    _fetchData().then((movies) {
-      debugPrint('$movies');
+    _fetchData(movieType, page).then((movieList) {
+      setState(() {
+        movies.addAll(movieList.movies);
+      });
     });
   }
 
@@ -49,6 +60,7 @@ class _MainPageState extends State<MainPage> {
               alignment: Alignment.bottomCenter,
               color: Colors.white,
               child: TabBar(
+                controller: _tabController,
                 labelColor: COLOR_BACKGROUND,
                 indicatorColor: COLOR_FOCUS,
                 indicatorWeight: 3,
@@ -61,16 +73,10 @@ class _MainPageState extends State<MainPage> {
             Expanded(
               flex: 1,
               child: TabBarView(
+                controller: _tabController,
                 children: [
-                  Container(
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 5.0,
-                      mainAxisSpacing: 5.0,
-                      childAspectRatio: 3 / 4,
-                      children: _buildGridTitle(10),
-                    ),
-                    padding: EdgeInsets.all(5),
+                  MoviesGridView(
+                    movies: this.movies,
                   ),
                   Container(
                     child: Text('hello'),
@@ -87,19 +93,13 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  List<Widget> _buildGridTitle(numberOfTiles) {
-    List<Container> _containers = List<Container>.generate(numberOfTiles,
-      (int index) {
-      return new Container(
-        color: Colors.orangeAccent,
-      );
-    });
-    return _containers;
-  }
-
-  Future<MovieList> _fetchData() async {
-    final respone =
-      await http.get('https://api.themoviedb.org/3/movie/popular?api_key=f507d227105e763cdd2ddf231fdfee81&language=en-US&page=1');
-    return MovieList.fromJSON(json.decode(respone.body));
+  Future<MovieList> _fetchData(String type, int page) async {
+    print('https://api.themoviedb.org/3/movie/'
+        + type + '?api_key=f507d227105e763cdd2ddf231fdfee81&language=en-US&page='
+        + page.toString());
+    final response = await http.get('https://api.themoviedb.org/3/movie/'
+          + type + '?api_key=f507d227105e763cdd2ddf231fdfee81&language=en-US&page='
+          + page.toString());
+    return MovieList.fromJSON(json.decode(response.body));
   }
 }
