@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:movie_app/widgets/movies_grid_view.dart';
+import 'package:movie_app/widgets/movie_app_bar.dart';
 import 'package:movie_app/model/movie_list.dart';
 import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/utils/constants.dart';
@@ -43,21 +44,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
         length: 3,
         child: Column(
           children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(top: 30, left: 10, right: 10),
-              height: 120,
-              color: COLOR_BACKGROUND,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    height: 60,
-                    child: Image.asset('assets/logo.png'),
-                  ),
-                  IconButton(icon: Image.asset('assets/chosen.png'), onPressed: () {})
-                ],
-              ),
+            MovieAppBar(
             ),
             Container(
               height: 50,
@@ -120,8 +107,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
         case 1:
           movieType = MOST_RATED;
           if (_mostRatedMovies.length == 0) {
-            MovieList fetchedMovies = await _fetchData(
-                movieType, _mostRatedPage);
+            MovieList fetchedMovies = await _fetchData(movieType, _mostRatedPage);
             setState(() {
               _mostRatedMovies.addAll(fetchedMovies.movies);
             });
