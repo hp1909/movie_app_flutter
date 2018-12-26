@@ -31,7 +31,7 @@ class MovieAppBar extends StatelessWidget {
                   fontSize: 18,
                   fontWeight: FontWeight.w100,
                 ),
-                softWrap: false,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),

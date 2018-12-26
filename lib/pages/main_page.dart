@@ -85,16 +85,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   }
 
   Future<MovieList> _fetchData(String type, int page) async {
-    print('https://api.themoviedb.org/3/movie/'
-        + type + '?api_key=f507d227105e763cdd2ddf231fdfee81&language=en-US&page='
-        + page.toString());
     final response = await http.get('https://api.themoviedb.org/3/movie/'
           + type + '?api_key=f507d227105e763cdd2ddf231fdfee81&language=en-US&page='
           + page.toString());
     return MovieList.fromJSON(json.decode(response.body));
   }
 
-  void _handleTabSelection() async {
+  _handleTabSelection() async {
     if (!_tabController.indexIsChanging) {
       switch (_tabController.index) {
         case 0:

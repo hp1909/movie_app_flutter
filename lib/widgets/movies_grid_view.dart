@@ -87,7 +87,7 @@ class _MovieTileState extends State<MovieTile> {
                   padding: EdgeInsets.only(top: 10),
                   child: Text(
                     movie.title.toUpperCase(),
-                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         fontSize: 16,
                         color: Colors.deepOrangeAccent,

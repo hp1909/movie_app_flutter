@@ -1,5 +1,3 @@
-import 'package:movie_app/utils/constants.dart';
-
 class Movie {
   final int id;
   final double voteAverage;
