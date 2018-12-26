@@ -1,5 +1,4 @@
 import 'movie.dart';
-import 'package:movie_app/utils/constants.dart';
 
 class MovieList {
   final int pageNumber;

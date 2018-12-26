@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 class Trailer {
   final String id;
   final String trailerKey;

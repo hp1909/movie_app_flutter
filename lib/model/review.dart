@@ -16,12 +16,26 @@ class ReviewList {
   final int page;
   final int totalPages;
   final int totalResults;
+  final List<Review> reviews;
 
-  ReviewList({this.movieId, this.page, this.totalPages, this.totalResults});
+  ReviewList({
+    this.movieId,
+    this.page,
+    this.totalPages,
+    this.totalResults,
+    this.reviews = const [],
+  });
 
-  ReviewList.fromJSON(Map<String, dynamic> json)
-    : movieId = json['id'],
-      page = json['page'],
-      totalPages = json['total_pages'],
-      totalResults = json['total_results'];
+  factory ReviewList.fromJSON(Map<String, dynamic> json) {
+    var reviewsFromJson = json['results'] as List;
+    List<Review> reviews = reviewsFromJson.map((item) => Review.fromJSON(item)).toList();
+
+    return ReviewList(
+      movieId: json['id'],
+      page: json['page'],
+      totalPages: json['total_pages'],
+      totalResults: json['total_results'],
+      reviews: reviews,
+    );
+  }
 }
