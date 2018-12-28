@@ -6,17 +6,17 @@ class MovieList {
 
   MovieList({this.pageNumber, this.movies});
 
-  factory MovieList.fromJSON(Map<String, dynamic> json) {
-    final List rawMovies = json['results'];
-    final List<Movie> movies = rawMovies.map((item) => Movie.fromJSON(item)).toList();
+  factory MovieList.fromMap(Map<String, dynamic> map) {
+    final List rawMovies = map['results'];
+    final List<Movie> movies = rawMovies.map((item) => Movie.fromMap(item)).toList();
 
     return MovieList(
-      pageNumber: json['page'],
+      pageNumber: map['page'],
       movies: movies,
     );
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
     'page' : pageNumber,
     'results': movies,
   };

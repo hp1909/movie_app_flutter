@@ -15,11 +15,23 @@ class Movie {
     this.releaseDate
   });
 
-  Movie.fromJSON(Map<String, dynamic> json)
-    : id = json['id'],
-      voteAverage = json['vote_average'].toDouble(),
-      title = json['title'],
-      posterPath = json['poster_path'],
-      overview = json['overview'],
-      releaseDate = json['release_date'];
+  Movie.fromMap(Map<String, dynamic> map)
+    : id = map['id'],
+      voteAverage = map['vote_average'].toDouble(),
+      title = map['title'],
+      posterPath = map['poster_path'],
+      overview = map['overview'],
+      releaseDate = map['release_date'];
+
+  Map<String, dynamic> toMap() {
+    var map = new Map<String, dynamic>();
+    map['id'] = id;
+    map['vote_average'] = voteAverage;
+    map['title'] = title;
+    map['poster_path'] = posterPath;
+    map['overview'] = overview;
+    map['release_date'] = releaseDate;
+
+    return map;
+  }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/widgets/movie_app_bar.dart';
-import 'package:movie_app/widgets/movie_overview.dart';
-import 'package:movie_app/widgets/movie_trailers.dart';
+import 'package:movie_app/pages/movie_info_page.dart';
+import 'package:movie_app/pages/movie_reviews_page.dart';
 import 'package:movie_app/utils/constants.dart';
+import 'dart:io';
 
 class MovieDetailPage extends StatefulWidget {
   final Movie movie;
@@ -44,22 +45,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   color: COLOR_LIGHT_PURPLE,
                   child: TabBarView(
                     children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.all(10),
-                        color: Colors.white,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: <Widget>[
-                              MovieOverview(movie: this.widget.movie),
-                              Divider(height: 30),
-                              MovieTrailers(movieId: this.widget.movie.id),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        
-                      ),
+                      MovieInfoPage(movie: this.widget.movie),
+                      MovieReviewsPage(movieId: this.widget.movie.id),
                     ],
                   ),
                 ),

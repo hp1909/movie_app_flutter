@@ -5,15 +5,28 @@ import 'package:movie_app/utils/constants.dart';
 
 class MoviesGridView extends StatefulWidget {
   final List<Movie> movies;
-  MoviesGridView({this.movies, Key key}) : super(key: key);
+  final bool isLoading;
+  MoviesGridView({this.movies, this.isLoading = true, Key key}) : super(key: key);
   @override
   _MoviesGridViewState createState() => _MoviesGridViewState();
 }
 
 class _MoviesGridViewState extends State<MoviesGridView> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
+    return this.widget.isLoading ?
+      Container(
+        width: 30,
+        height: 30,
+        alignment: Alignment.center,
+        child: CircularProgressIndicator(),
+      )
+    : Container(
       color: COLOR_LIGHT_PURPLE,
       child: GridView.count(
         crossAxisCount: 2,

@@ -5,10 +5,10 @@ class Review {
 
   Review({this.id, this.author, this.content});
 
-  Review.fromJSON(Map<String, dynamic> json)
-    : id = json['id'],
-      author = json['author'],
-      content = json['content'];
+  Review.fromMap(Map<String, dynamic> map)
+    : id = map['id'],
+      author = map['author'],
+      content = map['content'];
 }
 
 class ReviewList {
@@ -28,7 +28,7 @@ class ReviewList {
 
   factory ReviewList.fromJSON(Map<String, dynamic> json) {
     var reviewsFromJson = json['results'] as List;
-    List<Review> reviews = reviewsFromJson.map((item) => Review.fromJSON(item)).toList();
+    List<Review> reviews = reviewsFromJson.map((item) => Review.fromMap(item)).toList();
 
     return ReviewList(
       movieId: json['id'],

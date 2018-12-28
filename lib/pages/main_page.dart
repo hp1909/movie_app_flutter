@@ -68,9 +68,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 children: [
                   MoviesGridView(
                     movies: this._popularMovies,
+                    isLoading: this._popularMovies.length == 0,
                   ),
                   MoviesGridView(
                     movies: this._mostRatedMovies,
+                    isLoading: this._mostRatedMovies.length == 0,
                   ),
                   Container(
                     child: Text('hello'),
@@ -88,7 +90,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     final response = await http.get('https://api.themoviedb.org/3/movie/'
           + type + '?api_key=f507d227105e763cdd2ddf231fdfee81&language=en-US&page='
           + page.toString());
-    return MovieList.fromJSON(json.decode(response.body));
+    return MovieList.fromMap(json.decode(response.body));
   }
 
   _handleTabSelection() async {

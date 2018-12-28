@@ -13,12 +13,12 @@ class Trailer {
     this.type,
   });
 
-  Trailer.fromJSON(Map<String, dynamic> json)
-    : id = json['id'],
-      trailerKey = json['key'],
-      name = json['name'],
-      size = json['size'],
-      type = json['type'];
+  Trailer.fromMap(Map<String, dynamic> map)
+    : id = map['id'],
+      trailerKey = map['key'],
+      name = map['name'],
+      size = map['size'],
+      type = map['type'];
 }
 
 class TrailerList {
@@ -26,10 +26,10 @@ class TrailerList {
 
   TrailerList({this.trailers});
 
-  factory TrailerList.fromJSON(Map<String, dynamic> json) {
-    var listFromJson = json['results'] as List;
+  factory TrailerList.fromMap(Map<String, dynamic> map) {
+    var listFromJson = map['results'] as List;
     List<Trailer> trailers
-      = listFromJson.map((item) => Trailer.fromJSON(item)).toList();
+      = listFromJson.map((item) => Trailer.fromMap(item)).toList();
     return new TrailerList(trailers: trailers);
   }
 }

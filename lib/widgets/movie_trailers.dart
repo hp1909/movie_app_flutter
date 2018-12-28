@@ -17,7 +17,8 @@ class MovieTrailers extends StatefulWidget {
 
 class _MovieTrailersState extends State<MovieTrailers> {
 
-  List<Trailer> trailers = [];
+  List<Trailer> _trailers = [];
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -25,18 +26,19 @@ class _MovieTrailersState extends State<MovieTrailers> {
 
     _getMovieTrailers(this.widget.movieId).then((trailerList) {
       setState(() {
-        trailers = trailerList.trailers;
+        _trailers = trailerList.trailers;
+        _isLoading = false;
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return _isLoading ? CircularProgressIndicator() : Container(
       height: 250,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: trailers.length,
+        itemCount: _trailers.length,
         itemBuilder:
           (BuildContext context, int index) => _renderListTile(context, index),
       ),
@@ -52,14 +54,14 @@ class _MovieTrailersState extends State<MovieTrailers> {
           Stack(
             alignment: Alignment.center,
             children: <Widget>[
-              Image.network('https://img.youtube.com/vi/${trailers[index].trailerKey}/hqdefault.jpg'),
+              Image.network('https://img.youtube.com/vi/${_trailers[index].trailerKey}/hqdefault.jpg'),
               Icon(Icons.play_circle_outline, size: 50,color: Colors.white,)
             ],
           ),
           Padding(
             padding: EdgeInsets.only(top: 5),
             child: Text(
-              trailers[index].name,
+              _trailers[index].name,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -71,6 +73,6 @@ class _MovieTrailersState extends State<MovieTrailers> {
 
   Future<TrailerList> _getMovieTrailers(int movieId) async {
     final response = await http.get('https://api.themoviedb.org/3/movie/$movieId/videos?api_key=$API_KEY&language=en-US');
-    return TrailerList.fromJSON(json.decode(response.body));
+    return TrailerList.fromMap(json.decode(response.body));
   }
 }
