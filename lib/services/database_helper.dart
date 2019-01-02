@@ -15,7 +15,7 @@ class DatabaseHelper {
   final String title = 'title';
   final String posterPathColumn = 'poster_path';
   final String overviewColumn = 'overview';
-  final String releaseColumn = 'release';
+  final String releaseColumn = 'release_date';
 
   static Database _db;
 
@@ -34,17 +34,19 @@ class DatabaseHelper {
     String path = join(databasePath, 'movie.db');
 
     var db = await openDatabase(path, version: 1, onCreate: _onCreate);
+    return db;
   }
 
   void _onCreate(Database db, int version) async {
     await db.execute('CREATE TABLE $favoriteMovieTable ('
-        '$idColumn INTEGER,'
+        '$idColumn INTEGER PRIMARY KEY,'
         '$voteAverageColumn DECIMAL,'
         '$title TEXT,'
         '$posterPathColumn TEXT,'
         '$overviewColumn TEXT,'
         '$releaseColumn TEXT'
         ')');
+    print('created db');
   }
 
   Future<int> addFavoriteMovie(Movie movie) async {
@@ -70,6 +72,12 @@ class DatabaseHelper {
       await dbClient.rawQuery('SELECT * FROM $favoriteMovieTable WHERE $idColumn = $id');
 
     return result.length > 0 ? Movie.fromMap(result.first) : null;
+  }
+
+  Future<bool> isFavoriteMovie(int id) async {
+    var dbClient = await db;
+    Movie movie = await getFavoriteMovieFromId(id);
+    return movie != null;
   }
 
   Future<int> updateFavoriteMovie(Movie movie) async {

@@ -10,6 +10,7 @@ const COLOR_LIGHT_PURPLE = Color.fromARGB(255, 208, 216, 229);
 
 const POPULAR = 'popular';
 const MOST_RATED = 'top_rated';
+const FAVORITE = 'favorite';
 
 const POSTER_URL = 'https://image.tmdb.org/t/p/w500';
 const MOVIE_URL = 'https://api.themoviedb.org/3/movie/';

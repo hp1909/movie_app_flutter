@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/pages/movie_detail_page.dart';
 import 'package:movie_app/utils/constants.dart';
+import 'package:movie_app/services/database_helper.dart';
 
 class MoviesGridView extends StatefulWidget {
   final List<Movie> movies;
   final bool isLoading;
-  MoviesGridView({this.movies, this.isLoading = true, Key key}) : super(key: key);
+  final bool isFavoritePage;
+
+  MoviesGridView({this.movies, this.isLoading = false, this.isFavoritePage = false, Key key}) : super(key: key);
   @override
   _MoviesGridViewState createState() => _MoviesGridViewState();
 }
 
-class _MoviesGridViewState extends State<MoviesGridView> {
+class _MoviesGridViewState extends State<MoviesGridView> with AutomaticKeepAliveClientMixin {
+  ScrollController _controller = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -29,29 +34,35 @@ class _MoviesGridViewState extends State<MoviesGridView> {
     : Container(
       color: COLOR_LIGHT_PURPLE,
       child: GridView.count(
+        controller: _controller,
         crossAxisCount: 2,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         childAspectRatio: 3 / 5,
-        children: _buildGridTitle(this.widget.movies),
+        children: _buildGridTitle(this.widget.movies, this.widget.isFavoritePage),
       ),
       padding: EdgeInsets.all(5),
     );
   }
 
-  List<Widget> _buildGridTitle(List<Movie> movies) {
+  List<Widget> _buildGridTitle(List<Movie> movies, bool isFavoritePage) {
     List<MovieTile> _containers = List<MovieTile>.generate(movies.length,
             (int index) {
-          return new MovieTile(movie: movies[index]);
+          return new MovieTile(movie: movies[index], isFavoritePage: isFavoritePage);
         });
     return _containers;
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class MovieTile extends StatefulWidget {
   final Movie movie;
+  final bool isFavoritePage;
 
-  MovieTile({this.movie, Key key}) : super(key: key);
+  MovieTile({this.movie, this.isFavoritePage = false, Key key}) : super(key: key);
 
   @override
   _MovieTileState createState() => _MovieTileState();
@@ -61,9 +72,17 @@ class _MovieTileState extends State<MovieTile> {
 
   bool _isFavorite = false;
 
+  DatabaseHelper _db = new DatabaseHelper();
+
   @override
   void initState() {
     super.initState();
+
+    _db.isFavoriteMovie(this.widget.movie.id).then((isFavoriteMovie) {
+      setState(() {
+        _isFavorite = isFavoriteMovie;
+      });
+    });
   }
 
   @override
@@ -109,11 +128,17 @@ class _MovieTileState extends State<MovieTile> {
                 ),
               ],
             ),
+            this.widget.isFavoritePage ? null :
             GestureDetector(
               onTap: () {
                 setState(() {
                   _isFavorite = !_isFavorite;
                 });
+                if (_isFavorite) {
+                  _db.addFavoriteMovie(movie).then((result) => print(result));
+                } else {
+                  _db.removeFavoriteMovie(movie.id).then((result) => print(result));
+                }
               },
               child: Container(
                 margin: EdgeInsets.all(10),
@@ -129,7 +154,7 @@ class _MovieTileState extends State<MovieTile> {
                 ),
               ),
             ),
-          ],
+          ].where((item) => item != null).toList(),
         ),
       ),
     );

@@ -8,6 +8,7 @@ import 'package:movie_app/widgets/movie_app_bar.dart';
 import 'package:movie_app/model/movie_list.dart';
 import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/utils/constants.dart';
+import 'package:movie_app/services/database_helper.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -24,6 +25,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   List<Movie> _mostRatedMovies = [];
   int _mostRatedPage = 1;
 
+  List<Movie> _favoriteMovies = [];
+  bool _isLoadingFavorite = false;
+
+  DatabaseHelper db = new DatabaseHelper();
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +40,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       setState(() {
         _popularMovies.addAll(movieList.movies);
       });
+    });
+
+    db.getAllFavoriteMovies().then((favoriteMovie) {
+      print(favoriteMovie.length);
+      favoriteMovie.forEach((item) => print(item));
     });
   }
 
@@ -74,8 +85,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                     movies: this._mostRatedMovies,
                     isLoading: this._mostRatedMovies.length == 0,
                   ),
-                  Container(
-                    child: Text('hello'),
+                  MoviesGridView(
+                    movies: this._favoriteMovies,
+                    isLoading: false,
+                    isFavoritePage: true,
                   ),
                 ],
               ),
@@ -111,6 +124,19 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               _mostRatedMovies.addAll(fetchedMovies.movies);
             });
           }
+          break;
+        case 2:
+          movieType = FAVORITE;
+          setState(() {
+            _isLoadingFavorite = true;
+          });
+          db.getAllFavoriteMovies().then((favoriteMovies) {
+            setState(() {
+              _favoriteMovies = favoriteMovies.map((item) => Movie.fromMap(item)).toList();
+              favoriteMovies.forEach((item) => print(item));
+              _isLoadingFavorite = false;
+            });
+          });
           break;
         default:
           movieType = '';
