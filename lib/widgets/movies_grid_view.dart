@@ -20,7 +20,13 @@ class _MoviesGridViewState extends State<MoviesGridView> with AutomaticKeepAlive
   @override
   void initState() {
     super.initState();
+    
+    _controller.addListener(_scrollListener);
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +59,25 @@ class _MoviesGridViewState extends State<MoviesGridView> with AutomaticKeepAlive
     return _containers;
   }
 
+  void _scrollListener() async {
+    if (_controller.position.pixels == _controller.position.maxScrollExtent) {
+
+    }
+  }
+
+  Widget _loader(bool isLoading) {
+    return isLoading ? Container(
+      width: 50,
+      height: 50,
+      child: CircularProgressIndicator(),
+    ) : SizedBox(width: 0, height: 0);
+  }
+
   @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 }
 
 class MovieTile extends StatefulWidget {

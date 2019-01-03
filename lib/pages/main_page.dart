@@ -10,6 +10,8 @@ import 'package:movie_app/model/movie.dart';
 import 'package:movie_app/utils/constants.dart';
 import 'package:movie_app/services/database_helper.dart';
 
+import 'package:movie_app/model/movie_type.dart';
+
 class MainPage extends StatefulWidget {
   @override
   _MainPageState createState() => _MainPageState();
