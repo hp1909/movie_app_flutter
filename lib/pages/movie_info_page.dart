@@ -16,9 +16,9 @@ class MovieInfoPage extends StatefulWidget {
 
 class _MovieInfoPageState extends State<MovieInfoPage> with AutomaticKeepAliveClientMixin {
 
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

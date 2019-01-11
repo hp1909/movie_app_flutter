@@ -40,6 +40,7 @@ class _MoviesGridViewState extends State<MoviesGridView> with AutomaticKeepAlive
     : Container(
       color: COLOR_LIGHT_PURPLE,
       child: GridView.count(
+        padding: EdgeInsets.only(top: 10),
         controller: _controller,
         crossAxisCount: 2,
         crossAxisSpacing: 10,
@@ -61,7 +62,6 @@ class _MoviesGridViewState extends State<MoviesGridView> with AutomaticKeepAlive
 
   void _scrollListener() async {
     if (_controller.position.pixels == _controller.position.maxScrollExtent) {
-
     }
   }
 

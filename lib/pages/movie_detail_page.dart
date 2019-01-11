@@ -4,7 +4,8 @@ import 'package:movie_app/widgets/movie_app_bar.dart';
 import 'package:movie_app/pages/movie_info_page.dart';
 import 'package:movie_app/pages/movie_reviews_page.dart';
 import 'package:movie_app/utils/constants.dart';
-import 'dart:io';
+import 'package:movie_app/services/database_helper.dart';
+
 
 class MovieDetailPage extends StatefulWidget {
   final Movie movie;
@@ -17,6 +18,18 @@ class MovieDetailPage extends StatefulWidget {
 
 class _MovieDetailPageState extends State<MovieDetailPage> {
   final tabs = [Tab(text: 'DETAILS'), Tab(text: 'REVIEWS')];
+  DatabaseHelper _db = new DatabaseHelper();
+  bool _isFavoriteMovie = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _db.isFavoriteMovie(this.widget.movie.id).then((isFavoriteMovie) {
+      setState(() {
+        _isFavoriteMovie = isFavoriteMovie;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +67,21 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             ],
           )),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.favorite),
+        onPressed: handleFavoriteButtonPress,
+        child: Icon(Icons.favorite, color: _isFavoriteMovie ? Colors.deepOrangeAccent :  Colors.grey),
+        backgroundColor: Colors.white,
       ),
     );
+  }
+
+  void handleFavoriteButtonPress() async {
+    if (_isFavoriteMovie) {
+      await _db.removeFavoriteMovie(this.widget.movie.id);
+    } else {
+      await _db.addFavoriteMovie(this.widget.movie);
+    }
+    setState(() {
+      _isFavoriteMovie = !_isFavoriteMovie;
+    });
   }
 }
